@@ -1,0 +1,38 @@
+using PaymentContext.Domain.Entities;
+using PaymentContext.Domain.Repositories;
+
+namespace PaymentContext.Tests.Mocks
+{
+
+    public class FakeStudentRepository : IStudentRepository
+    {
+        public void CreateSubscription(Student student)
+        {
+        }
+
+        public bool DocumentExists(string document)
+        {
+            if (document == "99999")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public bool EmailExists(string email)
+        {
+            if (email == "eberton@outlook.com")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+}

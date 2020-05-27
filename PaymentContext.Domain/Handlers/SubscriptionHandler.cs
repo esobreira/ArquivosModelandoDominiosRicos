@@ -28,7 +28,7 @@ namespace PaymentContext.Domain.Handlers
             _emailService = emailService;
         }
 
-        ICommandResult IHandler<CreateBoletoSubscriptionCommand>.Handle(CreateBoletoSubscriptionCommand command)
+        public ICommandResult Handle(CreateBoletoSubscriptionCommand command)
         {
             // Fail fast validation
             command.Validate();
@@ -73,9 +73,12 @@ namespace PaymentContext.Domain.Handlers
             subscription.AddPayment(payment);
             student.AddSubscription(subscription);
 
-
             // Agrupar as validações
             AddNotifications(name, document, eMail, address, student, subscription, payment);
+
+            // Checa as validações
+            if (Invalid)
+                return new CommandResult(true, "Não foi possível realizar sua assinatura.");
 
             // Salvar as informações
             _repository.CreateSubscription(student);
@@ -111,7 +114,7 @@ namespace PaymentContext.Domain.Handlers
             var student = new Student(name, document, eMail);
             var subscription = new Subscription(DateTime.Now.AddMonths(1));
             var payment = new PayPalPayment(
-                command.TransactionCode, 
+                command.TransactionCode,
                 command.PaidDate,
                 command.ExpireDate,
                 command.Total,
